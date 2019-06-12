@@ -11,8 +11,7 @@ public:
 	void Move(int direction, float delta_time);
 
 	void ActivateScoreMult(int mult);
-	void ActivateLengthChange(float length);
-
+	
 	int GetScore();
 	int GetLives();
 
@@ -23,9 +22,7 @@ public:
 	void Dead();
 
 private:
-
-	float starting_length;
-	float max_length;
+	
 	float speed;
 	int screen_width;
 	int score;

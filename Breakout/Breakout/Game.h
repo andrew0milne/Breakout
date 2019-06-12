@@ -34,7 +34,6 @@ public:
 	void CheckBlocks(Block* block, Ball* b);
 
 	void ScoreMult(int mult);
-	void ResizePlayer(float length);
 	void BallSpeedIncrease(float speed_increase);
 	void Explosion(int new_ball_amount, Ball* b);
 

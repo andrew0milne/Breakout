@@ -28,7 +28,7 @@ std::vector<BlockInfo> MapReader::ReadInMap(std::string filename)
 {
 	std::vector<BlockInfo> block_info;
 
-	std::ifstream file(filename + ".csv");
+	std::ifstream file("Maps/" + filename + ".csv");
 	std::string line = "";
 
 

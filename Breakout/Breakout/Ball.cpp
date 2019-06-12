@@ -15,7 +15,7 @@ Ball::Ball()
 
 	starting_speed = speed;
 }
-
+ 
 Ball::Ball(sf::Vector2f pos, sf::Vector2f size, sf::Color colour, float speed, int width, int height, float speed_increase_rate)
 {
 	GameObject::Init(pos, size, colour);

@@ -286,13 +286,6 @@ void Game::CheckBlocks(Block* block, Ball* b)
 		ScoreMult(2);
 		break;
 	}
-	// Change Player Length
-	case 7:
-	{
-		block->Disable();
-		ResizePlayer(player->body->getSize().x * 2.0f);
-		break;
-	}
 	default:
 
 		break;
@@ -306,11 +299,6 @@ void Game::ScoreMult(int mult)
 {
 	player->ActivateScoreMult(mult);
 	ui.ActivateScoreMult();
-}
-
-void Game::ResizePlayer(float length)
-{
-	player->ActivateLengthChange(length);
 }
 
 void Game::BallSpeedIncrease(float speed_increase)

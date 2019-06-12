@@ -48,7 +48,7 @@ void UI::Init(float width, float height, int starting_score, int starting_lives)
 
 	try
 	{
-		font.loadFromFile(font_name);
+		font.loadFromFile("Fonts/" + font_name);
 	}
 	catch (...)
 	{
