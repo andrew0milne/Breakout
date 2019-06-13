@@ -12,18 +12,6 @@ MapReader::~MapReader()
 {
 }
 
-// Converts input filename to a wchar_t
-// From: http://www.cplusplus.com/forum/general/84768/
-wchar_t* MapReader::GetFileName(std::string filename, std::string file_type)
-{
-	std::string name = filename + file_type;
-	wchar_t* wcstring = new wchar_t[name.length() + 1];
-	copy(name.begin(), name.end(), wcstring);
-	wcstring[name.length()] = 0;
-
-	return wcstring;
-}
-
 std::vector<BlockInfo> MapReader::ReadInMap(std::string filename)
 {
 	std::vector<BlockInfo> block_info;
@@ -51,7 +39,7 @@ std::vector<BlockInfo> MapReader::ReadInMap(std::string filename)
 		}
 		x = 0;
 
-		while (std::getline(line_stream, data, ',') && max_y !=0)
+		while (std::getline(line_stream, data, ',') && max_y > 1)
 		{
 			BlockInfo temp;
 			int data_to_int = 0;
@@ -63,7 +51,11 @@ std::vector<BlockInfo> MapReader::ReadInMap(std::string filename)
 			}
 			catch (...)
 			{
-				std::cout << "Data value ("<< data<< ") at " << x+1 << ", " << max_y +1 << " is invalid" << std::endl;
+				if (data != "")
+				{
+					std::cout << "Data value (" << data << ") at " << x + 1 << ", " << max_y + 1 << " is invalid" << std::endl;
+				}
+
 				data_to_int = 0;
 			}
 

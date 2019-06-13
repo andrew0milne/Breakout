@@ -9,7 +9,7 @@ Player::Player()
 	score_mult = 1;
 }
 
-Player::Player(sf::Vector2f pos, sf::Vector2f size, sf::Color colour, float speed, int width, int starting_lives)
+Player::Player(sf::Vector2f pos, sf::Vector2f size, sf::Color colour, float speed, int width, int starting_lives, UI* ui)
 {
 	GameObject::Init(pos, size, colour);
 	this->speed = speed;
@@ -17,6 +17,9 @@ Player::Player(sf::Vector2f pos, sf::Vector2f size, sf::Color colour, float spee
 	lives = starting_lives;
 	score = 0;
 	score_mult = 1;
+	score_mult_on = false;
+	score_mult_timer = 0.0f;
+	this->ui = ui;
 }
 
 Player::~Player()
@@ -34,6 +37,19 @@ void Player::Update(sf::RenderWindow* window, float delta_time)
 	{
 		// left key is pressed: move our character
 		Move(1, delta_time);
+	}
+
+	if (score_mult_on)
+	{
+		score_mult_timer -= delta_time;
+
+		if (score_mult_timer <= 0.0f)
+		{
+			score_mult_on = false;
+			score_mult = 1.0f;
+
+			ui->ActivateScoreMult(sf::Color(255, 255, 255));
+		}
 	}
 
 	GameObject::Update(window);
@@ -56,6 +72,12 @@ void Player::Move(int direction, float delta_time)
 void Player::ActivateScoreMult(int mult)
 {
 	score_mult = mult;
+
+	score_mult_on = true;
+	score_mult_timer = 5.0f;
+
+	ui->ActivateScoreMult(sf::Color(255, 255, 0));
+
 }
 
 int Player::GetScore()

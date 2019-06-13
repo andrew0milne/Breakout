@@ -25,10 +25,10 @@ public:
 	Game();
 	~Game();
 	void SetUp();
-	bool UpdateGame();
-	void Update();
+	bool UpdateGame(sf::RenderWindow* window);
+	void Update(sf::RenderWindow* window);
 	void CheckCollisions(Ball* current_ball);
-	void Render();
+	void Render(sf::RenderWindow* window);
 	void CalculateDeltaTime();
 
 	void CheckBlocks(Block* block, Ball* b);
@@ -37,7 +37,7 @@ public:
 	void BallSpeedIncrease(float speed_increase);
 	void Explosion(int new_ball_amount, Ball* b);
 
-	sf::RenderWindow* window;
+	
 
 	Player* player;
 	Ball* ball;
@@ -57,5 +57,9 @@ private:
 	float delta_time;
 	std::chrono::steady_clock::time_point current_time;
 	std::chrono::steady_clock::time_point previous_time;
+
+	bool playing;
+
+	int blocks_hit;
 };
 

@@ -1,2 +1,16 @@
-﻿  main.cpp
+﻿  Game.cpp
+c:\users\andrewm\documents\github\breakout\breakout\breakout\game.cpp(25): warning C4018: '<': signed/unsigned mismatch
+c:\users\andrewm\documents\github\breakout\breakout\breakout\game.cpp(51): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+c:\users\andrewm\documents\github\breakout\breakout\breakout\game.cpp(75): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\andrewm\documents\github\breakout\breakout\breakout\game.cpp(76): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\andrewm\documents\github\breakout\breakout\breakout\game.cpp(79): warning C4018: '<': signed/unsigned mismatch
+c:\users\andrewm\documents\github\breakout\breakout\breakout\game.cpp(95): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\andrewm\documents\github\breakout\breakout\breakout\game.cpp(179): warning C4018: '<': signed/unsigned mismatch
+c:\users\andrewm\documents\github\breakout\breakout\breakout\game.cpp(206): warning C4018: '<': signed/unsigned mismatch
+c:\users\andrewm\documents\github\breakout\breakout\breakout\game.cpp(244): warning C4018: '<': signed/unsigned mismatch
+c:\users\andrewm\documents\github\breakout\breakout\breakout\game.cpp(323): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
   Breakout.vcxproj -> C:\Users\AndrewM\Documents\GitHub\Breakout\Breakout\Debug\Breakout.exe

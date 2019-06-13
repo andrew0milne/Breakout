@@ -1,4 +1,6 @@
 #include "GameObject.h"
+#include <chrono>
+#include <thread>
 
 #pragma once
 class UI
@@ -13,7 +15,9 @@ public:
 	void UpdateScore(int score);
 	void UpdateLives(int lives);
 	
-	void ActivateScoreMult();
+	void ActivateScoreMult(sf::Color colour);
+
+	void End(int score, int lives);
 
 	GameObject* walls[4];
 	float border_width;
@@ -24,6 +28,14 @@ private:
 	sf::Text score;
 	sf::Text lives;
 
+	sf::Text score_calculation;
+	sf::Text score_final;
+
 	float font_size;
+
+	int width;
+	int height;
+
+	bool end;
 };
 

@@ -28,8 +28,7 @@ Game::~Game()
 		blocks[i] = NULL;
 	}
 
-	delete window;
-	window = NULL;
+	
 
 	delete physics;
 	physics = NULL;
@@ -38,9 +37,11 @@ Game::~Game()
 // Sets up the various objects in the game
 void Game::SetUp()
 {
-	window = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "Ninja Kiwi Code Test - Breakout(ish)");
+	//window = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "Ninja Kiwi Code Test - Breakout(ish)");
 	
 	physics = new Physics();
+
+	
 
 	//Creates the Player
 	player = new Player
@@ -50,7 +51,8 @@ void Game::SetUp()
 		sf::Color(0.0f, 0.0f, 255.0f),				// Colour
 		500.0f,										// Speed
 		WIDTH,										// Screen bounds
-		3											// Starting lives
+		1,											// Starting lives
+		&ui											// Game UI
 	);
 
 	ui.Init(WIDTH, HEIGHT, 0, player->GetLives());
@@ -102,16 +104,20 @@ void Game::SetUp()
 	delta_time = 0.0f;
 	current_time = std::chrono::high_resolution_clock::now();
 	previous_time = std::chrono::high_resolution_clock::now();
+
+	playing = true;
+
+	blocks_hit = 0;
 }
 
 // Updates the game
-bool Game::UpdateGame()
+bool Game::UpdateGame(sf::RenderWindow* window)
 {
-	if (window->isOpen())
+	if (playing)
 	{
 		CalculateDeltaTime();
-		Update();
-		Render();
+		Update(window);
+		Render(window);
 
 		return true;
 	}
@@ -134,58 +140,52 @@ void Game::CalculateDeltaTime()
 }
 
 // Updates the various game objects
-void Game::Update()
+void Game::Update(sf::RenderWindow* window)
 {
-	sf::Event event;
-	while (window->pollEvent(event))
+	if (player->GetLives() >= 0)
 	{
-		// Checks if the game window has been closed
-		if (event.type == sf::Event::Closed)
+		player->Update(window, delta_time);
+
+		ball->Update(window, delta_time);
+		if (ball->previous_position.y >= HEIGHT)
 		{
-			window->close();
+			player->Dead();
+			ui.UpdateLives(player->GetLives());
+			ball->Reset();
+
+			if (player->GetLives() < 0)
+			{
+				ui.End(player->GetScore(), player->GetLives());
+				playing = false;
+			}
+		}
+
+		for (Ball* const& i : other_balls)
+		{
+			i->Update(window, delta_time);
+			if (i->previous_position.y >= HEIGHT)
+			{
+				i->active = false;
+				i->visible = false;
+			}
+		}
+
+		CheckCollisions(ball);
+		for (Ball* const& b : other_balls)
+		{
+			CheckCollisions(b);
+		}
+
+		for (int i = 0; i < blocks.size(); i++)
+		{
+			blocks[i]->Update(window);
 		}
 	}
-	
-	player->Update(window, delta_time);
 
-	ball->Update(window, delta_time);
-	if (ball->previous_position.y >= HEIGHT)
-	{		
-		player->Dead();
-		ui.UpdateLives(player->GetLives());
-		ball->Reset();		
-	}
-
-	for (Ball* const& i : other_balls)
+	if (blocks_hit >= map_reader.GetNumberOfBlocks())
 	{
-		i->Update(window, delta_time);
-		if (i->previous_position.y >= HEIGHT)
-		{
-			i->active = false;
-			i->visible = false;
-		}
-	}
-
-	//for (int i = 0; i < balls.size(); i++)
-	//{
-	//	balls[i]->Update(window, delta_time);
-
-	//	if (balls[i]->previous_position.y >= HEIGHT)
-	//	{
-	//		
-	//		//kill ball
-	//	}
-	//}
-
-	CheckCollisions(ball);
-	for (Ball* const& b : other_balls)
-	{
-		CheckCollisions(b);
-	}
-
-	for (int i = 0; i < blocks.size(); i++)
-	{
-		blocks[i]->Update(window);		
+		ui.End(player->GetScore(), player->GetLives());
+		playing = false;
 	}
 
 
@@ -193,7 +193,10 @@ void Game::Update()
 
 void Game::CheckCollisions(Ball* current_ball)
 {
-	physics->BallCollision(player, current_ball);
+	if (physics->BallCollision(player, current_ball))
+	{
+		current_ball->CalculateNewAngle();
+	}
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -215,13 +218,15 @@ void Game::CheckCollisions(Ball* current_ball)
 				}
 
 				CheckBlocks(blocks[i], current_ball);
+
+				blocks_hit++;
 			}
 		}
 	}
 }
 
 // Renders the game objects
-void Game::Render()
+void Game::Render(sf::RenderWindow* window)
 {
 	window->clear();
 	
@@ -234,12 +239,14 @@ void Game::Render()
 
 	ball->Render(window);
 
-	ui.Render(window);
+	
 
 	for (int i = 0; i < blocks.size(); i++)
 	{
 		blocks[i]->Render(window);
 	}
+
+	ui.Render(window);
 
 	window->display();
 }
@@ -298,7 +305,7 @@ void Game::CheckBlocks(Block* block, Ball* b)
 void Game::ScoreMult(int mult)
 {
 	player->ActivateScoreMult(mult);
-	ui.ActivateScoreMult();
+	//ui.ActivateScoreMult();
 }
 
 void Game::BallSpeedIncrease(float speed_increase)
